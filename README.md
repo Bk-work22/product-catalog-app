@@ -8,7 +8,7 @@ A full-stack e-commerce product management application built with Next.js, Mongo
   - Create, Read, Update, Delete products
   - Auto-generated slugs from product titles
   - Image upload to Cloudinary
-  - Product availability  tracking
+  - Product availability tracking
 
 - **Advanced Filtering**
   - Search products by title
