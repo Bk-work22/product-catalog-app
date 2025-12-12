@@ -44,9 +44,17 @@ const productsSlice = createSlice({
       state.items.push({ ...action.payload, id: newId });
     },
     updateProduct: (state, action: PayloadAction<Product>) => {
-      const index = state.items.findIndex(p => p.id === action.payload.id);
+      const index = state.items.findIndex(
+        p => p.id === action.payload.id || 
+             p._id === action.payload._id || 
+             p._id === action.payload.id ||
+             p.id === action.payload._id
+      );
       if (index !== -1) {
-        state.items[index] = action.payload;
+        state.items[index] = {
+          ...action.payload,
+          id: action.payload._id || action.payload.id,
+        };
       }
     },
     deleteProduct: (state, action: PayloadAction<string | number>) => {

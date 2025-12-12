@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface FormState {
   dialogOpen: boolean;
+  editingProductId: string | null;
   title: string;
   image: string;
   category: string;
@@ -12,6 +13,7 @@ interface FormState {
 
 const initialState: FormState = {
   dialogOpen: false,
+  editingProductId: null,
   title: "",
   image: "",
   category: "",
@@ -46,12 +48,30 @@ const formSlice = createSlice({
       state.description = action.payload;
     },
     resetForm: (state) => {
+      state.editingProductId = null;
       state.title = "";
       state.image = "";
       state.category = "";
       state.price = "";
       state.availability = true;
       state.description = "";
+    },
+    setEditingProduct: (state, action: PayloadAction<{
+      id: string;
+      title: string;
+      image: string;
+      category: string;
+      price: number;
+      availability: boolean;
+      description: string;
+    }>) => {
+      state.editingProductId = action.payload.id;
+      state.title = action.payload.title;
+      state.image = action.payload.image;
+      state.category = action.payload.category;
+      state.price = action.payload.price.toString();
+      state.availability = action.payload.availability;
+      state.description = action.payload.description;
     },
   },
 });
@@ -65,6 +85,7 @@ export const {
   setAvailability,
   setDescription,
   resetForm,
+  setEditingProduct,
 } = formSlice.actions;
 export default formSlice.reducer;
 
