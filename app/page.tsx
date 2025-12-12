@@ -26,13 +26,11 @@ const page = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   
-  // Redux state
   const { items: products, loading } = useAppSelector((state) => state.products);
   const formState = useAppSelector((state) => state.form);
   const { searchQuery, selectedCategories, priceRange, sortBy } = useAppSelector((state) => state.filters);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
 
-  // Fetch products from API
   const fetchProducts = useCallback(async () => {
     try {
       dispatch(setLoading(true));
@@ -41,7 +39,6 @@ const page = () => {
       const params: any = {};
       if (searchQuery.trim()) params.search = searchQuery.trim();
       if (selectedCategories.length > 0) params.category = selectedCategories.join(',');
-      // Price range: slider value is max price (0 means no limit)
       if (priceRange[0] > 0 && priceRange[0] < 1000) {
         params.maxPrice = priceRange[0];
       }
@@ -64,25 +61,22 @@ const page = () => {
     }
   }, [searchQuery, selectedCategories, priceRange, sortBy, dispatch]);
 
-  // Initial load on mount
   useEffect(() => {
     if (isInitialLoad) {
       fetchProducts();
     }
   }, []);
 
-  // Debounce search to avoid too many API calls
   useEffect(() => {
     if (!isInitialLoad) {
       const timer = setTimeout(() => {
         fetchProducts();
-      }, 500); // Wait 500ms after user stops typing
+      }, 500);
 
       return () => clearTimeout(timer);
     }
   }, [searchQuery, fetchProducts, isInitialLoad]);
 
-  // Fetch products when other filters change (not search - that's debounced)
   useEffect(() => {
     if (!isInitialLoad) {
       fetchProducts();
@@ -111,7 +105,6 @@ const page = () => {
 
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6">
-        {/* FILTER SIDEBAR */}
         <aside className="lg:col-span-3 bg-white p-4 rounded-2xl shadow-sm">
           <Input 
             placeholder="Search" 
@@ -162,10 +155,7 @@ const page = () => {
           </Select>
         </aside>
 
-
-        {/* PRODUCT GRID */}
         <div className="lg:col-span-9 relative">
-          {/* Show full loading only on initial load */}
           {loading && isInitialLoad && products.length === 0 ? (
             <div className="flex items-center justify-center h-64">
               <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
@@ -176,7 +166,6 @@ const page = () => {
             </div>
           ) : (
             <div className="relative">
-              {/* Subtle loading overlay when filtering (doesn't hide products) */}
               {loading && !isInitialLoad && (
                 <div className="absolute inset-0 bg-white/50 backdrop-blur-sm z-10 flex items-center justify-center rounded-lg">
                   <Loader2 className="h-6 w-6 animate-spin text-gray-400" />

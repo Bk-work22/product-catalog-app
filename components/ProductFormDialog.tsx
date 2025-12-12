@@ -36,7 +36,6 @@ export function ProductFormDialog({ open, onOpenChange, onSuccess }: ProductForm
   
   const formState = useAppSelector((state) => state.form);
 
-  // Auto-generate slug from title
   const slug = useMemo(() => {
     if (!formState.title) return "";
     return formState.title
@@ -47,7 +46,6 @@ export function ProductFormDialog({ open, onOpenChange, onSuccess }: ProductForm
       .replace(/^-+|-+$/g, '');
   }, [formState.title]);
 
-  // Handle image file upload
   const handleImageUpload = async (file: File) => {
     try {
       setUploading(true);
@@ -68,16 +66,13 @@ export function ProductFormDialog({ open, onOpenChange, onSuccess }: ProductForm
     }
   };
 
-  // Handle file input change
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Validate file type
       if (!file.type.startsWith('image/')) {
         setErrorMessage('Please select an image file');
         return;
       }
-      // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         setErrorMessage('Image size must be less than 5MB');
         return;
@@ -86,12 +81,10 @@ export function ProductFormDialog({ open, onOpenChange, onSuccess }: ProductForm
     }
   };
 
-  // Handle form submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
 
-    // Validation
     if (!formState.title || !formState.image || !formState.category || !formState.price || !formState.description) {
       setErrorMessage('Please fill in all required fields');
       return;
@@ -109,18 +102,14 @@ export function ProductFormDialog({ open, onOpenChange, onSuccess }: ProductForm
         description: formState.description,
       };
 
-      // Check if we're editing or creating
       if (formState.editingProductId) {
-        // Update existing product
         const response = await productsAPI.update(formState.editingProductId, productData);
 
         if (response.success) {
-          // Reset form and close dialog
           dispatch(resetForm());
           onOpenChange(false);
           setErrorMessage(null);
           
-          // Call onSuccess callback to refresh data
           if (onSuccess) {
             onSuccess();
           }
@@ -128,16 +117,13 @@ export function ProductFormDialog({ open, onOpenChange, onSuccess }: ProductForm
           throw new Error(response.error || 'Failed to update product');
         }
       } else {
-        // Create new product
         const response = await productsAPI.create(productData);
 
         if (response.success) {
-          // Reset form and close dialog
           dispatch(resetForm());
           onOpenChange(false);
           setErrorMessage(null);
           
-          // Call onSuccess callback to refresh data
           if (onSuccess) {
             onSuccess();
           }

@@ -45,7 +45,6 @@ export default function ProductDetailPage() {
       
       if (response.success) {
         setProduct(response.data);
-        // Fetch related products
         fetchRelatedProducts(response.data.category, response.data._id);
       } else {
         throw new Error(response.error || 'Failed to fetch product');
@@ -62,7 +61,6 @@ export default function ProductDetailPage() {
     try {
       const response = await productsAPI.getAll({ category, limit: 4 });
       if (response.success) {
-        // Filter out current product and limit to 3-4 items
         const related = response.data
           .filter((p: Product) => p._id !== excludeId)
           .slice(0, 4);
@@ -122,22 +120,18 @@ export default function ProductDetailPage() {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
-      {/* Breadcrumbs */}
       <div className="mb-4 sm:mb-6">
         <Link href="/" className="text-gray-500 hover:text-gray-700 text-sm sm:text-base">Home</Link>
         <span className="mx-2 text-gray-500">/</span>
         <span className="text-gray-700 text-sm sm:text-base">{product.category}</span>
       </div>
 
-      {/* Back Button */}
       <Button variant="outline" onClick={() => router.push('/')} className="mb-4 sm:mb-6 w-full sm:w-auto">
         <ArrowLeft className="h-4 w-4 mr-2" />
         Back to Products
       </Button>
 
-      {/* Product Details */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 mb-8 sm:mb-12">
-        {/* Product Image */}
         <div className="lg:col-span-5">
           <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
             <img 
@@ -148,7 +142,6 @@ export default function ProductDetailPage() {
           </div>
         </div>
 
-        {/* Product Info */}
         <div className="lg:col-span-7">
           <h1 className="text-2xl sm:text-3xl font-bold mb-4">{product.title}</h1>
           
@@ -173,11 +166,9 @@ export default function ProductDetailPage() {
             <p className="text-gray-700 leading-relaxed">{product.description}</p>
           </div>
 
-          {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             <Button 
               onClick={() => {
-                // Populate form with product data
                 dispatch(setEditingProduct({
                   id: product._id,
                   title: product.title,
@@ -187,7 +178,6 @@ export default function ProductDetailPage() {
                   availability: product.availability,
                   description: product.description,
                 }));
-                // Open dialog on the same page
                 dispatch(setDialogOpen(true));
               }}
               className="flex items-center justify-center gap-2 w-full sm:w-auto"
@@ -217,7 +207,6 @@ export default function ProductDetailPage() {
         </div>
       </div>
 
-      {/* Related Products */}
       {relatedProducts.length > 0 && (
         <div className="mt-8 sm:mt-12">
           <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Related Products</h2>
@@ -237,12 +226,10 @@ export default function ProductDetailPage() {
         </div>
       )}
 
-      {/* Product Form Dialog */}
       <ProductFormDialog
         open={formState.dialogOpen}
         onOpenChange={(open) => dispatch(setDialogOpen(open))}
         onSuccess={() => {
-          // Refresh product data after update
           fetchProduct();
           fetchRelatedProducts(product?.category || '', product?._id || '');
         }}
