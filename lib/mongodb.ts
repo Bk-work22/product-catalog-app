@@ -20,7 +20,7 @@ async function connectDB(): Promise<typeof mongoose> {
   const MONGODB_URI = process.env.MONGODB_URI;
 
   if (!MONGODB_URI) {
-    throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
+    throw new Error('Please define the MONGODB_URI environment variable. For local development, add it to .env.local. For production (Vercel), add it in your environment variables settings.');
   }
 
   if (cached.conn) {

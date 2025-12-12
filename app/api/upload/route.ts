@@ -1,15 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { v2 as cloudinary } from 'cloudinary';
 
-// Configure Cloudinary
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
+// Configure Cloudinary (will be checked in the POST handler)
+const configureCloudinary = () => {
+  const cloud_name = process.env.CLOUDINARY_CLOUD_NAME;
+  const api_key = process.env.CLOUDINARY_API_KEY;
+  const api_secret = process.env.CLOUDINARY_API_SECRET;
+
+  if (!cloud_name || !api_key || !api_secret) {
+    throw new Error('Please define CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET environment variables. For local development, add them to .env.local. For production (Vercel), add them in your environment variables settings.');
+  }
+
+  cloudinary.config({
+    cloud_name,
+    api_key,
+    api_secret,
+  });
+};
 
 export async function POST(request: NextRequest) {
   try {
+    // Configure Cloudinary before use
+    configureCloudinary();
+
     const formData = await request.formData();
     const file = formData.get('file') as File;
 
