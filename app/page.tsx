@@ -207,7 +207,7 @@ const page = () => {
         <h1 className="text-2xl font-semibold">Products</h1>
         <Dialog open={formState.dialogOpen} onOpenChange={(open: boolean) => dispatch(setDialogOpen(open))}>
           <DialogTrigger asChild>
-            <Button className="flex items-center gap-2"><Plus size={16} /> Add Product</Button>
+        <Button className="flex items-center gap-2"><Plus size={16} /> Add Product</Button>
           </DialogTrigger>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
@@ -450,7 +450,7 @@ const page = () => {
                 </div>
               )}
               <div className={`grid grid-cols-4 gap-6 transition-opacity ${loading && !isInitialLoad ? 'opacity-60' : 'opacity-100'}`}>
-                {products.map((p) => (
+          {products.map((p) => (
                   <div 
                     key={p.id || p._id} 
                     className="bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition cursor-pointer"
@@ -458,9 +458,9 @@ const page = () => {
                   >
                     <img src={p.image} alt={p.title || p.name} className="w-full h-40 object-contain mb-3" />
                     <h4 className="font-semibold text-lg">{p.title || p.name}</h4>
-                    <p className="text-gray-600">${p.price.toFixed(2)}</p>
-                  </div>
-                ))}
+              <p className="text-gray-600">${p.price.toFixed(2)}</p>
+            </div>
+          ))}
               </div>
             </div>
           )}
